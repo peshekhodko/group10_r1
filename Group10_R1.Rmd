@@ -1,0 +1,30 @@
+---
+title: "R1 project"
+subtitle: "Group 10"
+author: 
+- Christopher Comora
+- Nataliya Peshekhodko 
+- Zhuoning Liu
+date: '`r format(Sys.Date(), "%Y-%B-%d")`'
+
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. General Procedure
+
+## 2. Repeat the general procedure `N=5000` times
+
+## 3. Summary about different method execution
+
+## 4. Repeat steps above for diffrent sample sizes 
+
+## 5. Advantages and disadvantages of different types of interval 
+
+## 6. Apply the 4 different methods to the horse-kick death data and report the 95% confidence intervals obtained by each method.
+
