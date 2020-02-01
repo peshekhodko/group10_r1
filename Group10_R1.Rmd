@@ -12,12 +12,19 @@ output:
   html_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, echo = FALSE}
+set.seed(10)
 ```
 
 ## 1. General Procedure
-
+```{r}
+n=10
+lambda = 1
+```
+Generate a random sample of size `r n` with parameter $\lambda$=`r lambda`. 
+```{r}
+data = rpois (n, lambda)
+```
 ## 2. Repeat the general procedure `N=5000` times
 
 ## 3. Summary about different method execution
