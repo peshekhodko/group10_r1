@@ -21,9 +21,28 @@ set.seed(10)
 n=10
 lambda = 1
 ```
-Generate a random sample of size `r n` with parameter $\lambda$=`r lambda`. 
+1.a Generate a random sample of size `r n` with parameter $\lambda$=`r lambda`. 
 ```{r}
 data = rpois (n, lambda)
+```
+1. b Create and save a 95% CI for the mean of the population using the approximate
+confidence interval 1.
+```{r}
+lambda_hat = mean (data)
+approx_var = var (data)
+
+lower_bound_ci1 = lambda_hat + qnorm(0.025)*sqrt(approx_var/length(data))
+upper_bound_ci1 = lambda_hat - qnorm(0.025)*sqrt(approx_var/length(data))
+ci_1 <- c(lower_bound_ci1, upper_bound_ci1)
+ci_1
+```
+1. c Create and save a 95% CI for the mean of the population using the approximate
+confidence interval 1.
+```{r}
+lower_bound_ci2 = lambda_hat + qnorm(0.025)*sqrt(lambda_hat/length(data))
+upper_bound_ci2 = lambda_hat - qnorm(0.025)*sqrt(lambda_hat/length(data))
+ci_2 <- c(lower_bound_ci2, upper_bound_ci2)
+ci_2
 ```
 ## 2. Repeat the general procedure `N=5000` times
 
