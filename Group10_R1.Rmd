@@ -13,6 +13,7 @@ output:
 ---
 
 ```{r, echo = FALSE}
+library(knitr)
 set.seed(10)
 ```
 
@@ -121,6 +122,28 @@ ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 ```
 
 ## 3. Summary about different method execution
+
+Calculate proportion of times each method contains the true value of the mean = 1.
+```{r}
+ci_1_prop <- nrow (subset (ci_1, ci_1$lower_bound<=1 & ci_1$upper_bound >=1))/nrow(ci_1)
+ci_2_prop <- nrow (subset (ci_2, ci_2$lower_bound<=1 & ci_2$upper_bound >=1))/nrow(ci_2)
+ci_3_prop <- nrow (subset (ci_3, ci_3$lower_bound<=1 & ci_3$upper_bound >=1))/nrow(ci_3)
+ci_4_prop <- nrow (subset (ci_4, ci_4$lower_bound<=1 & ci_4$upper_bound >=1))/nrow(ci_4)
+```
+
+Calculate the average length of the CIs created by the procedure.
+```{r}
+ci_1_avg <- mean (ci_1$upper_bound - ci_1$lower_boun)
+ci_2_avg <- mean (ci_2$upper_bound - ci_2$lower_boun)
+ci_3_avg <- mean (ci_3$upper_bound - ci_3$lower_boun)
+ci_4_avg <- mean (ci_4$upper_bound - ci_4$lower_boun)
+
+dt <- data.frame (c ("Approximate 1", "Approximate 2", "Parametric Bootstrap", "Nonparametric Bootstrap"), 
+                  c(ci_1_prop, ci_2_prop, ci_3_prop, ci_4_prop), 
+                  c (ci_1_avg, ci_2_avg, ci_3_avg, ci_4_avg))
+colnames(dt) <- c ("Method", "Prop Containing", "Avg Length")
+kable(dt)
+```
 
 ## 4. Repeat steps above for diffrent sample sizes 
 
