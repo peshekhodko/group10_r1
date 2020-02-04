@@ -133,10 +133,10 @@ ci_4_prop <- nrow (subset (ci_4, ci_4$lower_bound<=1 & ci_4$upper_bound >=1))/nr
 
 Calculate the average length of the CIs created by the procedure.
 ```{r}
-ci_1_avg <- mean (ci_1$upper_bound - ci_1$lower_boun)
-ci_2_avg <- mean (ci_2$upper_bound - ci_2$lower_boun)
-ci_3_avg <- mean (ci_3$upper_bound - ci_3$lower_boun)
-ci_4_avg <- mean (ci_4$upper_bound - ci_4$lower_boun)
+ci_1_avg <- mean (ci_1$upper_bound - ci_1$lower_bound)
+ci_2_avg <- mean (ci_2$upper_bound - ci_2$lower_bound)
+ci_3_avg <- mean (ci_3$upper_bound - ci_3$lower_bound)
+ci_4_avg <- mean (ci_4$upper_bound - ci_4$lower_bound)
 
 dt <- data.frame (c ("Approximate 1", "Approximate 2", "Parametric Bootstrap", "Nonparametric Bootstrap"), 
                   c(ci_1_prop, ci_2_prop, ci_3_prop, ci_4_prop), 
@@ -146,6 +146,163 @@ kable(dt)
 ```
 
 ## 4. Repeat steps above for diffrent sample sizes 
+```{r}
+n=30
+```
+
+Repeat steps above for sample size `n`=`r n`
+```{r}
+data = rpois (n, lambda)
+lambda_hat = mean (data)
+approx_var = var (data)
+
+means <- c()
+lower_bound <- c()
+upper_bound <- c()
+
+for (j in 1:N){
+  data = rpois (n, lambda)
+  means[j] = mean (data) 
+  lower_bound[j] = means[j] - qnorm(1-alpha/2)*sqrt(var(data)/length(data))
+  upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(var(data)/length(data))  
+}
+ci_1 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+
+
+lower_bound <- c()
+upper_bound <- c()
+for (j in 1:N) {
+  lower_bound[j] = means[j] - qnorm(1-alpha/2)*sqrt(means[j]/length(data))
+  upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(means[j]/length(data))
+}
+ci_2 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+
+means <- c()
+lower_bound <- c()
+upper_bound <- c()
+
+for (j in 1:N) {
+  bootData <- replicate (n=B, expr = rpois (n, lambda_hat))
+  means<-colMeans(bootData)
+  lower_bound[j] = quantile (means, 0.025)
+  upper_bound[j] = quantile (means, 0.975)
+}
+ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+
+ means <- c()
+ lower_bound <- c()
+ upper_bound <- c()
+ 
+ for (j in 1:N) { 
+   lambda_vec <- rep(NA, B)
+   for(i in 1:B){
+     sel <- sample(1:n, n, replace=TRUE)
+     bootstrap_x <- data[sel]
+     lambda_vec[i] <- mean(bootstrap_x)  }
+   lower_bound[j] <- quantile(lambda_vec, 0.025)
+   upper_bound[j] <- quantile(lambda_vec, 0.975)}
+ ci_4 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+
+ 
+ci_1_prop <- nrow (subset (ci_1, ci_1$lower_bound<=1 & ci_1$upper_bound >=1))/nrow(ci_1)
+ci_2_prop <- nrow (subset (ci_2, ci_2$lower_bound<=1 & ci_2$upper_bound >=1))/nrow(ci_2)
+ci_3_prop <- nrow (subset (ci_3, ci_3$lower_bound<=1 & ci_3$upper_bound >=1))/nrow(ci_3)
+ci_4_prop <- nrow (subset (ci_4, ci_4$lower_bound<=1 & ci_4$upper_bound >=1))/nrow(ci_4)
+
+ci_1_avg <- mean (ci_1$upper_bound - ci_1$lower_bound)
+ci_2_avg <- mean (ci_2$upper_bound - ci_2$lower_bound)
+ci_3_avg <- mean (ci_3$upper_bound - ci_3$lower_bound)
+ci_4_avg <- mean (ci_4$upper_bound - ci_4$lower_bound)
+
+dt <- data.frame (c ("Approximate 1", "Approximate 2", "Parametric Bootstrap", 
+                     "Nonparametric Bootstrap"), 
+                  c(ci_1_prop, ci_2_prop, ci_3_prop, ci_4_prop), 
+                  c (ci_1_avg, ci_2_avg, ci_3_avg, ci_4_avg))
+colnames(dt) <- c ("Method", "Prop Containing", "Avg Length")
+kable(dt)
+```
+
+```{r}
+n=200
+```
+
+Repeat steps above for sample size `n`=`r n` and for the horse-kick death data.
+```{r}
+
+data <- c(rep(0, 109), rep(1,65), rep(2,22), rep(3,3), rep(4,1))
+
+lambda_hat = mean (data)
+approx_var = var (data)
+
+means <- c()
+lower_bound <- c()
+upper_bound <- c()
+
+for (j in 1:N){
+  data = rpois (n, lambda)
+  means[j] = mean (data) 
+  lower_bound[j] = means[j] - qnorm(1-alpha/2)*sqrt(var(data)/length(data))
+  upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(var(data)/length(data))  
+}
+ci_1 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+
+
+lower_bound <- c()
+upper_bound <- c()
+for (j in 1:N) {
+  lower_bound[j] = means[j] - qnorm(1-alpha/2)*sqrt(means[j]/length(data))
+  upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(means[j]/length(data))
+}
+ci_2 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+
+means <- c()
+lower_bound <- c()
+upper_bound <- c()
+
+for (j in 1:N) {
+  bootData <- replicate (n=B, expr = rpois (n, lambda_hat))
+  means<-colMeans(bootData)
+  lower_bound[j] = quantile (means, 0.025)
+  upper_bound[j] = quantile (means, 0.975)
+}
+ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+
+ means <- c()
+ lower_bound <- c()
+ upper_bound <- c()
+ 
+ for (j in 1:N) { 
+   lambda_vec <- rep(NA, B)
+   for(i in 1:B){
+     sel <- sample(1:n, n, replace=TRUE)
+     bootstrap_x <- data[sel]
+     lambda_vec[i] <- mean(bootstrap_x)  }
+   lower_bound[j] <- quantile(lambda_vec, 0.025)
+   upper_bound[j] <- quantile(lambda_vec, 0.975)}
+ ci_4 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+
+ 
+ci_1_prop <- nrow (subset (ci_1, ci_1$lower_bound<=1 & ci_1$upper_bound >=1))/nrow(ci_1)
+ci_2_prop <- nrow (subset (ci_2, ci_2$lower_bound<=1 & ci_2$upper_bound >=1))/nrow(ci_2)
+ci_3_prop <- nrow (subset (ci_3, ci_3$lower_bound<=1 & ci_3$upper_bound >=1))/nrow(ci_3)
+ci_4_prop <- nrow (subset (ci_4, ci_4$lower_bound<=1 & ci_4$upper_bound >=1))/nrow(ci_4)
+
+ci_1_avg <- mean (ci_1$upper_bound - ci_1$lower_bound)
+ci_2_avg <- mean (ci_2$upper_bound - ci_2$lower_bound)
+ci_3_avg <- mean (ci_3$upper_bound - ci_3$lower_bound)
+ci_4_avg <- mean (ci_4$upper_bound - ci_4$lower_bound)
+
+dt <- data.frame (c ("Approximate 1", "Approximate 2", "Parametric Bootstrap", 
+                     "Nonparametric Bootstrap"), 
+                  c(ci_1_prop, ci_2_prop, ci_3_prop, ci_4_prop), 
+                  c (ci_1_avg, ci_2_avg, ci_3_avg, ci_4_avg))
+colnames(dt) <- c ("Method", "Prop Containing", "Avg Length")
+kable(dt)
+```
+
+
+
+
 
 ## 5. Advantages and disadvantages of different types of interval 
 
