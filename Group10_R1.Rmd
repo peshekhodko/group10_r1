@@ -28,15 +28,16 @@ alpha = 0.05
 ```{r}
 data = rpois (n, lambda)
 ```
+
 1. b Create and save a 95% CI for the mean of the population using the approximate
 confidence interval 1.
+
 ```{r}
 lambda_hat = mean (data)
 
 lower_bound_ci1 = lambda_hat - qnorm(1-alpha/2)*sqrt(var(data)/length(data))
 upper_bound_ci1 = lambda_hat + qnorm(1-alpha/2)*sqrt(var(data)/length(data))
-ci_1 <- c(lower_bound_ci1, upper_bound_ci1)
-ci_1
+c(lower_bound_ci1, upper_bound_ci1)
 ```
 
 1. c Create and save a 95% CI for the mean of the population using the approximate
@@ -67,9 +68,14 @@ quantile(lambda_vec,c(0.025,0.975))
 ```
 
 ## 2. Repeat the general procedure `N=5000` times
+
 ```{r}
 N = 5000
+```
+Create and save a 95% CI for the mean of the population using the approximate
+confidence interval 1. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`.
 
+```{r}
 means <- c()
 lower_bound <- c()
 upper_bound <- c()
@@ -81,7 +87,12 @@ for (j in 1:N){
   upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(var(data)/length(data))  
 }
 ci_1 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+```
 
+Create and save a 95% CI for the mean of the population using the approximate
+confidence interval 2. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`.
+
+```{r}
 lower_bound <- c()
 upper_bound <- c()
 for (j in 1:N) {
@@ -89,7 +100,12 @@ for (j in 1:N) {
   upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(means[j]/length(data))
 }
 ci_2 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+```
 
+Create and save a 95% CI for the mean of the population using parametric bootstrap. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`, 
+bootstrap size `B = ` `r B`.
+
+```{r}
 means <- c()
 lower_bound <- c()
 upper_bound <- c()
@@ -101,7 +117,13 @@ for (j in 1:N) {
   upper_bound[j] = quantile (means, 0.975)
 }
 ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+```
 
+
+Create and save a 95% CI for the mean of the population using nonparametric bootstrap. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`, 
+bootstrap size `B = ` `r B`.
+
+```{r}
  means <- c()
  lower_bound <- c()
  upper_bound <- c()
@@ -151,7 +173,8 @@ kable(dt)
 n=30
 ```
 
-Repeat steps above for sample size `n`=`r n`
+Create and save a 95% CI for the mean of the population using the approximate
+confidence interval 1. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`.
 
 ```{r}
 data = rpois (n, lambda)
@@ -169,8 +192,12 @@ for (j in 1:N){
   upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(var(data)/length(data))  
 }
 ci_1 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+```
 
+Create and save a 95% CI for the mean of the population using the approximate
+confidence interval 2. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`.
 
+```{r}
 lower_bound <- c()
 upper_bound <- c()
 for (j in 1:N) {
@@ -178,7 +205,12 @@ for (j in 1:N) {
   upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(means[j]/length(data))
 }
 ci_2 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+```
 
+Create and save a 95% CI for the mean of the population using parametric bootstrap. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`, 
+bootstrap size `B = ` `r B`.
+
+```{r}
 means <- c()
 lower_bound <- c()
 upper_bound <- c()
@@ -189,10 +221,14 @@ for (j in 1:N) {
   lower_bound[j] = quantile (means, 0.025)
   upper_bound[j] = quantile (means, 0.975)
 }
-
-
 ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 
+```
+
+Create and save a 95% CI for the mean of the population using nonparametric bootstrap. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`, 
+bootstrap size `B = ` `r B`.
+
+```{r}
  means <- c()
  lower_bound <- c()
  upper_bound <- c()
@@ -233,11 +269,12 @@ kable(dt)
 n=200
 ```
 
-Repeat steps above for sample size `n`=`r n` and for the horse-kick death data.
+Repeat steps above for sample size `n`=`r n`
 
-Generating horse-kick death data
 ```{r}
-data <- c(rep(0, 109), rep(1,65), rep(2,22), rep(3,3), rep(4,1))
+#data <- c(rep(0, 109), rep(1,65), rep(2,22), rep(3,3), rep(4,1))
+data = rpois (n, lambda)
+
 ```
 
 Creating and saving 95% CI for mean using the approximate confidence interval 1 approach:
@@ -334,3 +371,95 @@ kable(dt)
 
 ## 6. Apply the 4 different methods to the horse-kick death data and report the 95% confidence intervals obtained by each method.
 
+Generating horse-kick death data, `n=` 'r n`
+
+```{r}
+data <- c(rep(0, 109), rep(1,65), rep(2,22), rep(3,3), rep(4,1))
+```
+
+Creating and saving 95% CI for mean using the approximate confidence interval 1 approach:
+
+```{r}
+lambda_hat = mean (data)
+
+means <- c()
+lower_bound <- c()
+upper_bound <- c()
+
+for (j in 1:N){
+  data = rpois (n, lambda_hat)
+  means[j] = mean (data) 
+  lower_bound[j] = means[j] - qnorm(1-alpha/2)*sqrt(var(data)/length(data))
+  upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(var(data)/length(data))  
+}
+ci_1 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+```
+
+Creating and saving 95% CI for mean using the approximate confidence interval 2 approach:
+  
+```{r} 
+lower_bound <- c()
+upper_bound <- c()
+for (j in 1:N) {
+  lower_bound[j] = means[j] - qnorm(1-alpha/2)*sqrt(means[j]/length(data))
+  upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(means[j]/length(data))
+}
+ci_2 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+```
+
+Creating and saving 95% CI for mean using the parametric bootstrap approach:
+
+```{r} 
+means <- c()
+lower_bound <- c()
+upper_bound <- c()
+
+for (j in 1:N) {
+  bootData <- replicate (n=B, expr = rpois (n, lambda_hat))
+  means<-colMeans(bootData)
+  lower_bound[j] = quantile (means, 0.025)
+  upper_bound[j] = quantile (means, 0.975)
+  
+}
+ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+```
+
+Creating and saving 95% CI for mean using the non-parametric bootstrap approach:
+
+```{r}
+ means <- c()
+ lower_bound <- c()
+ upper_bound <- c()
+ 
+ for (j in 1:N) { 
+   lambda_vec <- rep(NA, B)
+   for(i in 1:B){
+     sel <- sample(1:n, n, replace=TRUE)
+     bootstrap_x <- data[sel]
+     lambda_vec[i] <- mean(bootstrap_x)  }
+   lower_bound[j] <- quantile(lambda_vec, 0.025)
+   upper_bound[j] <- quantile(lambda_vec, 0.975)}
+ ci_4 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+
+ 
+ci_1_prop <- nrow (subset (ci_1, ci_1$lower_bound<=lambda_hat & 
+                             ci_1$upper_bound>=lambda_hat))/nrow(ci_1)
+ci_2_prop <- nrow (subset (ci_2, ci_2$lower_bound<=lambda_hat & 
+                             ci_2$upper_bound>=lambda_hat))/nrow(ci_2)
+ci_3_prop <- nrow (subset (ci_3, ci_3$lower_bound<=lambda_hat & 
+                             ci_3$upper_bound>=lambda_hat))/nrow(ci_3)
+ci_4_prop <- nrow (subset (ci_4, ci_4$lower_bound<=lambda_hat & 
+                             ci_4$upper_bound>=lambda_hat))/nrow(ci_4)
+
+ci_1_avg <- mean (ci_1$upper_bound - ci_1$lower_bound)
+ci_2_avg <- mean (ci_2$upper_bound - ci_2$lower_bound)
+ci_3_avg <- mean (ci_3$upper_bound - ci_3$lower_bound)
+ci_4_avg <- mean (ci_4$upper_bound - ci_4$lower_bound)
+
+dt <- data.frame (c ("Approximate 1", "Approximate 2", "Parametric Bootstrap", 
+                     "Nonparametric Bootstrap"), 
+                  c(ci_1_prop, ci_2_prop, ci_3_prop, ci_4_prop), 
+                  c (ci_1_avg, ci_2_avg, ci_3_avg, ci_4_avg))
+colnames(dt) <- c ("Method", "Prop Containing", "Avg Length")
+kable(dt)
+```
