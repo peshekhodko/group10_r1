@@ -222,7 +222,6 @@ for (j in 1:N) {
   upper_bound[j] = quantile (means, 0.975)
 }
 ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
-
 ```
 
 Create and save a 95% CI for the mean of the population using nonparametric bootstrap. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`, 
@@ -342,14 +341,14 @@ Creating and saving 95% CI for mean using the non-parametric bootstrap approach:
  ci_4 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 
  
-ci_1_prop <- nrow (subset (ci_1, ci_1$lower_bound<=lambda_hat & 
-                             ci_1$upper_bound>=lambda_hat))/nrow(ci_1)
-ci_2_prop <- nrow (subset (ci_2, ci_2$lower_bound<=lambda_hat & 
-                             ci_2$upper_bound>=lambda_hat))/nrow(ci_2)
-ci_3_prop <- nrow (subset (ci_3, ci_3$lower_bound<=lambda_hat & 
-                             ci_3$upper_bound>=lambda_hat))/nrow(ci_3)
-ci_4_prop <- nrow (subset (ci_4, ci_4$lower_bound<=lambda_hat & 
-                             ci_4$upper_bound>=lambda_hat))/nrow(ci_4)
+ci_1_prop <- nrow (subset (ci_1, ci_1$lower_bound<=lambda & 
+                             ci_1$upper_bound>=lambda))/nrow(ci_1)
+ci_2_prop <- nrow (subset (ci_2, ci_2$lower_bound<=lambda & 
+                             ci_2$upper_bound>=lambda))/nrow(ci_2)
+ci_3_prop <- nrow (subset (ci_3, ci_3$lower_bound<=lambda & 
+                             ci_3$upper_bound>=lambda))/nrow(ci_3)
+ci_4_prop <- nrow (subset (ci_4, ci_4$lower_bound<=lambda & 
+                             ci_4$upper_bound>=lambda))/nrow(ci_4)
 
 ci_1_avg <- mean (ci_1$upper_bound - ci_1$lower_bound)
 ci_2_avg <- mean (ci_2$upper_bound - ci_2$lower_bound)
@@ -386,12 +385,12 @@ means <- c()
 lower_bound <- c()
 upper_bound <- c()
 
-for (j in 1:N){
+
   data = rpois (n, lambda_hat)
-  means[j] = mean (data) 
-  lower_bound[j] = means[j] - qnorm(1-alpha/2)*sqrt(var(data)/length(data))
-  upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(var(data)/length(data))  
-}
+  means = mean (data) 
+  lower_bound = means - qnorm(1-alpha/2)*sqrt(var(data)/length(data))
+  upper_bound = means + qnorm(1-alpha/2)*sqrt(var(data)/length(data))  
+
 ci_1 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 ```
 
@@ -400,11 +399,12 @@ Creating and saving 95% CI for mean using the approximate confidence interval 2 
 ```{r} 
 lower_bound <- c()
 upper_bound <- c()
-for (j in 1:N) {
-  lower_bound[j] = means[j] - qnorm(1-alpha/2)*sqrt(means[j]/length(data))
-  upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(means[j]/length(data))
-}
+
+  lower_bound = means - qnorm(1-alpha/2)*sqrt(means/length(data))
+  upper_bound = means + qnorm(1-alpha/2)*sqrt(means/length(data))
+
 ci_2 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
+
 ```
 
 Creating and saving 95% CI for mean using the parametric bootstrap approach:
@@ -414,13 +414,11 @@ means <- c()
 lower_bound <- c()
 upper_bound <- c()
 
-for (j in 1:N) {
   bootData <- replicate (n=B, expr = rpois (n, lambda_hat))
   means<-colMeans(bootData)
-  lower_bound[j] = quantile (means, 0.025)
-  upper_bound[j] = quantile (means, 0.975)
+  lower_bound = quantile (means, 0.025)
+  upper_bound = quantile (means, 0.975)
   
-}
 ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 ```
 
@@ -431,16 +429,14 @@ Creating and saving 95% CI for mean using the non-parametric bootstrap approach:
  lower_bound <- c()
  upper_bound <- c()
  
- for (j in 1:N) { 
    lambda_vec <- rep(NA, B)
    for(i in 1:B){
      sel <- sample(1:n, n, replace=TRUE)
      bootstrap_x <- data[sel]
-     lambda_vec[i] <- mean(bootstrap_x)  }
-   lower_bound[j] <- quantile(lambda_vec, 0.025)
-   upper_bound[j] <- quantile(lambda_vec, 0.975)}
- ci_4 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
-
+     lambda_vec[i] <- mean(bootstrap_x)  } 
+   lower_bound <- quantile(lambda_vec, 0.025)
+   upper_bound <- quantile(lambda_vec, 0.975)  #}
+ci_4 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
  
 ci_1_prop <- nrow (subset (ci_1, ci_1$lower_bound<=lambda_hat & 
                              ci_1$upper_bound>=lambda_hat))/nrow(ci_1)
@@ -462,4 +458,15 @@ dt <- data.frame (c ("Approximate 1", "Approximate 2", "Parametric Bootstrap",
                   c (ci_1_avg, ci_2_avg, ci_3_avg, ci_4_avg))
 colnames(dt) <- c ("Method", "Prop Containing", "Avg Length")
 kable(dt)
+```
+
+95%  Confidence Interval depending on method
+
+```{r}
+dci <- data.frame (  c("CI 1", "CI 2", "Parametric Bootsrap", "Nonparametric bootstrap"),
+                     c( ci_1$lower_bound, ci_2$lower_bound,ci_3$lower_bound, ci_4$lower_bound ), 
+                     c(ci_1$upper_bound, ci_2$upper_bound, ci_3$upper_bound, ci_4$upper_bound)  )
+
+colnames (dci) <- c ("Method", "Lower Bound", "Upper Bound")
+kable(dci)
 ```
