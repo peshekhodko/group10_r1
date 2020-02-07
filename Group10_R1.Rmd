@@ -365,8 +365,21 @@ kable(dt)
 
 
 
-
 ## 5. Advantages and disadvantages of different types of interval 
+
+1. Confidence interval based on Normal distribution with true population variance.
+   Difficult to use in real life because usually we do not know population variance. 
+
+2. Confidence interval based on Normal distribution with estimated variance.
+   Relies on CLT and requires sample size to be large. For not large samples could not work correctly.  
+   Does not require normality from the original data. 
+
+3. Confidence Interval based on Parametric bootsrap
+   Requires assumption about population distribution that could be wrong. 
+   If you don have large enough sample and know approximately population distribution then Parametric bootstarp will work better that Nonparametric.
+
+4. Confidence Interval based on Nonparametric bootsrtap
+   Works very well when sample size is large enough and we do not population didtribution.     
 
 ## 6. Apply the 4 different methods to the horse-kick death data and report the 95% confidence intervals obtained by each method.
 
@@ -452,12 +465,13 @@ ci_2_avg <- mean (ci_2$upper_bound - ci_2$lower_bound)
 ci_3_avg <- mean (ci_3$upper_bound - ci_3$lower_bound)
 ci_4_avg <- mean (ci_4$upper_bound - ci_4$lower_bound)
 
-dt <- data.frame (c ("Approximate 1", "Approximate 2", "Parametric Bootstrap", 
-                     "Nonparametric Bootstrap"), 
-                  c(ci_1_prop, ci_2_prop, ci_3_prop, ci_4_prop), 
-                  c (ci_1_avg, ci_2_avg, ci_3_avg, ci_4_avg))
-colnames(dt) <- c ("Method", "Prop Containing", "Avg Length")
-kable(dt)
+#dt <- data.frame (c ("Approximate 1", "Approximate 2", "Parametric Bootstrap", 
+#                     "Nonparametric Bootstrap"), 
+#                  c(ci_1_prop, ci_2_prop, ci_3_prop, ci_4_prop), 
+#                  c (ci_1_avg, ci_2_avg, ci_3_avg, ci_4_avg))
+
+#colnames(dt) <- c ("Method", "Prop Containing", "Avg Length")
+#kable(dt)
 ```
 
 95%  Confidence Interval depending on method
@@ -470,3 +484,5 @@ dci <- data.frame (  c("CI 1", "CI 2", "Parametric Bootsrap", "Nonparametric boo
 colnames (dci) <- c ("Method", "Lower Bound", "Upper Bound")
 kable(dci)
 ```
+
+## Conclusion
