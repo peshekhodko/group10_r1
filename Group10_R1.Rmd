@@ -24,46 +24,66 @@ lambda = 1
 B = 1000
 alpha = 0.05
 ```
-1.a Generate a random sample of size `r n` with parameter $\lambda$=`r lambda`. 
+### 1.a Generate a random sample of size `r n` with parameter $\lambda$=`r lambda`. 
+
 ```{r}
 data = rpois (n, lambda)
 ```
 
-1. b Create and save a 95% CI for the mean of the population using the approximate
-confidence interval 1.
+### 1.b Create and save a 95% CI for the mean of the population using the approximate confidence interval 1.
 
 ```{r}
 lambda_hat = mean (data)
 
 lower_bound_ci1 = lambda_hat - qnorm(1-alpha/2)*sqrt(var(data)/length(data))
 upper_bound_ci1 = lambda_hat + qnorm(1-alpha/2)*sqrt(var(data)/length(data))
+```
+
+Calculated CI is
+
+```{r}
 c(lower_bound_ci1, upper_bound_ci1)
 ```
 
-1. c Create and save a 95% CI for the mean of the population using the approximate
-confidence interval 2.
+### 1.c Create and save a 95% CI for the mean of the population using the approximate confidence interval 2.
+
 ```{r}
 lower_bound_ci2 = lambda_hat - qnorm(1-alpha/2)*sqrt(lambda_hat/length(data))
 upper_bound_ci2 = lambda_hat + qnorm(1-alpha/2)*sqrt(lambda_hat/length(data))
+```
+
+Claculated CI is
+
+```{r}
 c(lower_bound_ci2, upper_bound_ci2)
 ```
 
-1.d Create and save 95% CIs for the mean of the population using the parametric
-bootstrap method. ($B$ = `r B`)
+### 1.d Create and save 95% CIs for the mean of the population using the parametric bootstrap method. ($B$ = `r B`)
+
 ```{r}
 bootData <- replicate (n=B, expr = rpois (n, lambda_hat))
 means<-colMeans(bootData)
+```
+
+Calculated CI is
+
+```{r}
 c(quantile (means, 0.025), quantile (means, 0.975))
 ```
 
-1.e Create and save 95% CIs for the mean of the population using the nonparametric
-bootstrap method. ($B$ = `r B`)
+### 1.e Create and save 95% CIs for the mean of the population using the nonparametric bootstrap method. ($B$ = `r B`)
+
 ```{r}
 lambda_vec <- rep(NA, B)
 for(i in 1:B){
 sel <- sample(1:n, n, replace=TRUE)
   bootstrap_x <- data[sel]
   lambda_vec[i] <- mean(bootstrap_x) }
+```
+
+Calculated CI is
+
+```{r}
 quantile(lambda_vec,c(0.025,0.975))
 ```
 
@@ -72,6 +92,7 @@ quantile(lambda_vec,c(0.025,0.975))
 ```{r}
 N = 5000
 ```
+
 Create and save a 95% CI for the mean of the population using the approximate
 confidence interval 1. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`.
 
@@ -118,7 +139,6 @@ for (j in 1:N) {
 }
 ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 ```
-
 
 Create and save a 95% CI for the mean of the population using nonparametric bootstrap. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`, 
 bootstrap size `B = ` `r B`.
@@ -271,9 +291,7 @@ n=200
 Repeat steps above for sample size `n`=`r n`
 
 ```{r}
-#data <- c(rep(0, 109), rep(1,65), rep(2,22), rep(3,3), rep(4,1))
 data = rpois (n, lambda)
-
 ```
 
 Creating and saving 95% CI for mean using the approximate confidence interval 1 approach:
@@ -364,22 +382,25 @@ kable(dt)
 ```
 
 
-
 ## 5. Advantages and disadvantages of different types of interval 
 
-1. Confidence interval based on Normal distribution with true population variance.
-   Difficult to use in real life because usually we do not know population variance. 
+1. **Confidence interval based on Normal distribution with true population variance.** 
+   Difficult to use in real life because usually we do not know population variance. If population variance is known, Confidence Interval estimation 
+   is more correct compare with Confidence Interval estimation with approximated variance.
 
-2. Confidence interval based on Normal distribution with estimated variance.
+2. **Confidence interval based on Normal distribution with estimated variance.**
    Relies on CLT and requires sample size to be large. For not large samples could not work correctly.  
-   Does not require normality from the original data. 
+   Does not require normality from the original data and does not require knowledge about true population variance. 
 
-3. Confidence Interval based on Parametric bootsrap
+3. **Confidence Interval based on Parametric bootsrap.**
    Requires assumption about population distribution that could be wrong. 
-   If you don have large enough sample and know approximately population distribution then Parametric bootstarp will work better that Nonparametric.
+   If you do not have large enough sample and know population distribution (or made correct prediction), then Parametric bootstarp will work better 
+   than Nonparametric. For small samples with good assumption about population distribution, Parametric Bootstrap works better 
+   than Nonparametric bootstrap. 
 
-4. Confidence Interval based on Nonparametric bootsrtap
-   Works very well when sample size is large enough and we do not population didtribution.     
+4. **Confidence Interval based on Nonparametric bootsrtap**
+   Works very well when sample size is large enough and we do not know population distribution. Big advatange that should not do any 
+   guess about population distribution. Disadvantage - samlpe size should be reasonably large.    
 
 ## 6. Apply the 4 different methods to the horse-kick death data and report the 95% confidence intervals obtained by each method.
 
@@ -387,6 +408,12 @@ Generating horse-kick death data, `n=` 'r n`
 
 ```{r}
 data <- c(rep(0, 109), rep(1,65), rep(2,22), rep(3,3), rep(4,1))
+```
+
+Horse-kick data distribution
+
+```{r}
+hist (data, main = "Histogram for Horse-kick per year", xlab = "Number of horse-kicks annually", col = "grey")
 ```
 
 Creating and saving 95% CI for mean using the approximate confidence interval 1 approach:
@@ -464,14 +491,6 @@ ci_1_avg <- mean (ci_1$upper_bound - ci_1$lower_bound)
 ci_2_avg <- mean (ci_2$upper_bound - ci_2$lower_bound)
 ci_3_avg <- mean (ci_3$upper_bound - ci_3$lower_bound)
 ci_4_avg <- mean (ci_4$upper_bound - ci_4$lower_bound)
-
-#dt <- data.frame (c ("Approximate 1", "Approximate 2", "Parametric Bootstrap", 
-#                     "Nonparametric Bootstrap"), 
-#                  c(ci_1_prop, ci_2_prop, ci_3_prop, ci_4_prop), 
-#                  c (ci_1_avg, ci_2_avg, ci_3_avg, ci_4_avg))
-
-#colnames(dt) <- c ("Method", "Prop Containing", "Avg Length")
-#kable(dt)
 ```
 
 95%  Confidence Interval depending on method
@@ -486,3 +505,6 @@ kable(dci)
 ```
 
 ## Conclusion
+
+For data randomly generated from the Poisson distibution with sample size `n=10`, Parametric distribution works better than nonparametric. 
+As sample size grows `n=30` and `n=200`, Nonparametric bootstrap shows better results. CI1 and CI2 show pretty much similar results.  
