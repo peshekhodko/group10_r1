@@ -7,6 +7,8 @@ author:
 - Zhuoning Liu
 date: '`r format(Sys.Date(), "%Y-%B-%d")`'
 
+abstract: "This project will involve a simulation study and a real data analysis with horse-kick death data. The goal of this project is in making inference for the mean of the distribution. Several different ways of constructing confidence intervals will be constructed."
+
 output:
   pdf_document: default
   html_document: default
@@ -17,11 +19,10 @@ library(knitr)
 set.seed(10)
 ```
 
-## Abstarct 
-This project will involve a simulation study and a real data analysis with horse-kick death data. The goal of this project 
-is in making inference for the mean of the distribution. Several different ways of constructing confidence intervals will be considered.
-
 ## 1. General Procedure
+
+Setting up variables.
+
 ```{r}
 n=10
 lambda = 1
