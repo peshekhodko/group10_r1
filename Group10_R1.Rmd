@@ -38,6 +38,7 @@ data = rpois (n, lambda)
 ### 1.b Create and save a 95% CI for the mean of the population using the approximate confidence interval 1.
 
 ```{r}
+#calculate mean and upper and lower bounds of CI
 lambda_hat = mean (data)
 
 lower_bound_ci1 = lambda_hat - qnorm(1-alpha/2)*sqrt(var(data)/length(data))
@@ -53,6 +54,7 @@ c(lower_bound_ci1, upper_bound_ci1)
 ### 1.c Create and save a 95% CI for the mean of the population using the approximate confidence interval 2.
 
 ```{r}
+#calculate upper and lower bounds of CI
 lower_bound_ci2 = lambda_hat - qnorm(1-alpha/2)*sqrt(lambda_hat/length(data))
 upper_bound_ci2 = lambda_hat + qnorm(1-alpha/2)*sqrt(lambda_hat/length(data))
 ```
@@ -69,6 +71,7 @@ Replicating randomly generated data from Poisson distribution `B = ` `r B` times
 
 ```{r}
 bootData <- replicate (n=B, expr = rpois (n, lambda_hat))
+#calculate mean of each column representing a bootstrap sample
 means<-colMeans(bootData)
 ```
 
@@ -81,6 +84,7 @@ c(quantile (means, 0.025), quantile (means, 0.975))
 ### 1.e Create and save 95% CIs for the mean of the population using the nonparametric bootstrap method. ($B$ = `r B`)
 
 ```{r}
+#create vector of lambda values for each sample
 lambda_vec <- rep(NA, B)
 for(i in 1:B){
 sel <- sample(1:n, n, replace=TRUE)
@@ -104,10 +108,11 @@ Create and save a 95% CI for the mean of the population using the approximate
 confidence interval 1. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`.
 
 ```{r}
+#initialize vectors
 means <- c()
 lower_bound <- c()
 upper_bound <- c()
-
+#calculate means and upper and lower bounds for each sample
 for (j in 1:N){
   data = rpois (n, lambda)
   means[j] = mean (data) 
@@ -126,8 +131,10 @@ Create and save a 95% CI for the mean of the population using the approximate
 confidence interval 2. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`.
 
 ```{r}
+#initialize vectors
 lower_bound <- c()
 upper_bound <- c()
+#create upper and lower bounds for each sample
 for (j in 1:N) {
   lower_bound[j] = means[j] - qnorm(1-alpha/2)*sqrt(means[j]/length(data))
   upper_bound[j] = means[j] + qnorm(1-alpha/2)*sqrt(means[j]/length(data))
@@ -144,10 +151,11 @@ Create and save a 95% CI for the mean of the population using parametric bootstr
 bootstrap size `B = ` `r B`.
 
 ```{r}
+#initilize vectors
 means <- c()
 lower_bound <- c()
 upper_bound <- c()
-
+#create boostrap data and calculate mean, upper and lower bound for each N
 for (j in 1:N) {
   bootData <- replicate (n=B, expr = rpois (n, lambda_hat))
   means<-colMeans(bootData)
@@ -166,6 +174,7 @@ Create and save a 95% CI for the mean of the population using nonparametric boot
 bootstrap size `B = ` `r B`.
 
 ```{r}
+#initialize vectors
  means <- c()
  lower_bound <- c()
  upper_bound <- c()
@@ -230,10 +239,11 @@ Create and save a 95% CI for the mean of the population using the approximate
 confidence interval 1. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`.
 
 ```{r}
+#initialize variables
 data = rpois (n, lambda)
 lambda_hat = mean (data)
 approx_var = var (data)
-
+#initialize vectors
 means <- c()
 lower_bound <- c()
 upper_bound <- c()
@@ -256,6 +266,7 @@ Create and save a 95% CI for the mean of the population using the approximate
 confidence interval 2. Repeat this action `N = ` `r N` times. Sample size `n=` `r n`.
 
 ```{r}
+#initialize vectors
 lower_bound <- c()
 upper_bound <- c()
 for (j in 1:N) {
@@ -274,6 +285,7 @@ Create and save a 95% CI for the mean of the population using parametric bootstr
 bootstrap size `B = ` `r B`.
 
 ```{r}
+#initialize vectors
 means <- c()
 lower_bound <- c()
 upper_bound <- c()
@@ -296,6 +308,7 @@ Create and save a 95% CI for the mean of the population using nonparametric boot
 bootstrap size `B = ` `r B`.
 
 ```{r}
+#initialize vectors
  means <- c()
  lower_bound <- c()
  upper_bound <- c()
@@ -353,8 +366,9 @@ data = rpois (n, lambda)
 Creating and saving 95% CI for mean using the approximate confidence interval 1 approach and save data to the data frame:
 
 ```{r}
+#initialize variable
 lambda_hat = mean (data)
-
+#initialize vectors
 means <- c()
 lower_bound <- c()
 upper_bound <- c()
@@ -371,6 +385,7 @@ ci_1 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 Creating and saving 95% CI for mean using the approximate confidence interval 2 approach and save data to the data frame:
   
 ```{r} 
+#initialize vectors
 lower_bound <- c()
 upper_bound <- c()
 for (j in 1:N) {
@@ -383,6 +398,7 @@ ci_2 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 Creating and saving 95% CI for mean using the parametric bootstrap approach and save data to the data frame:
 
 ```{r} 
+#initialize vectors
 means <- c()
 lower_bound <- c()
 upper_bound <- c()
@@ -400,6 +416,7 @@ ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 Creating and saving 95% CI for mean using the non-parametric bootstrap approach and save data to the data frame:
 
 ```{r}
+#initialize vectors
  means <- c()
  lower_bound <- c()
  upper_bound <- c()
@@ -482,12 +499,14 @@ hist (data, main = "Histogram for Horse-kick per year", xlab = "Number of horse-
 Creating and saving 95% CI for mean using the approximate confidence interval 1 approach and save data to the data frame:
 
 ```{r}
+#initialize variable
 lambda_hat = mean (data)
 
 means <- c()
+#initialize vectors
 lower_bound <- c()
 upper_bound <- c()
-
+#generate n random values from a poisson distribution
   data = rpois (n, lambda_hat)
   means = mean (data) 
   lower_bound = means - qnorm(1-alpha/2)*sqrt(var(data)/length(data))
@@ -499,6 +518,7 @@ ci_1 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 Creating and saving 95% CI for mean using the approximate confidence interval 2 approach and save data to the data frame:
   
 ```{r} 
+#initialize vectors
 lower_bound <- c()
 upper_bound <- c()
 
@@ -511,6 +531,7 @@ ci_2 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 Creating and saving 95% CI for mean using the parametric bootstrap approach and save data to the data frame:
 
 ```{r} 
+#initialize vectors
 means <- c()
 lower_bound <- c()
 upper_bound <- c()
@@ -526,6 +547,7 @@ ci_3 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 Creating and saving 95% CI for mean using the non-parametric bootstrap approach and save data to the data frame:
 
 ```{r}
+#initialize vectors
  means <- c()
  lower_bound <- c()
  upper_bound <- c()
@@ -543,6 +565,7 @@ ci_4 <- data.frame ("lower_bound" = lower_bound, "upper_bound" = upper_bound)
 95%  Confidence Interval depending on method
 
 ```{r}
+#create dataframe with summary results and put in table format
 dci <- data.frame (  c("CI 1", "CI 2", "Parametric Bootsrap", "Nonparametric bootstrap"),
                      c( ci_1$lower_bound, ci_2$lower_bound,ci_3$lower_bound, ci_4$lower_bound ), 
                      c(ci_1$upper_bound, ci_2$upper_bound, ci_3$upper_bound, ci_4$upper_bound)  )
