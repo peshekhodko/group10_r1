@@ -7,7 +7,7 @@ author:
 - Zhuoning Liu
 date: '`r format(Sys.Date(), "%Y-%B-%d")`'
 
-abstract: "This project will involve a simulation study and a real data analysis with horse-kick death data. The goal of this project is in making inference for the mean of the distribution. Several different ways of constructing confidence intervals will be constructed."
+abstract: "This project involves a simulation and a real data analysis with horse-kick death data. The goal of this project is in making inference for the mean of the Poisson distribution.Several different ways of constructing confidence intervals are constructed. Results of different methods are compared, and the advantages and disadvantages of each method are explained."
 
 output:
   pdf_document: default
